@@ -1,0 +1,29 @@
+# Maintainer: airwoodix <airwoodix@posteo.me>
+
+pkgname=python-sysfs-gpio-git
+pkgver=0.2.0.3bca3c2
+pkgrel=1
+url='https://pypi.org/project/gpio'
+license=('MIT')
+arch=('any')
+source=('git+https://github.com/cloudformdesign/gpio')
+sha1sums=('SKIP')
+depends=('python-setuptools')
+
+_gitname='gpio'
+
+pkgver() {
+    cd "${srcdir}/${_gitname}"
+    printf "%s.%s" "$(python setup.py --version)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+    cd "${srcdir}/${_gitname}"
+    python setup.py build
+}
+
+package() {
+    cd "${srcdir}/${_gitname}"
+    python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+    install -Dm644 LICENSE.txt -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
