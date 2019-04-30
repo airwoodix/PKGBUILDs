@@ -1,0 +1,12 @@
+[Unit]
+Description=TCP to serial bridge
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/tcp_serial_redirect.py -q /dev/%i 115200
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

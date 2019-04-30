@@ -1,0 +1,35 @@
+# From: https://www.archlinux.org/packages/community/any/python-pyserial/
+# Maintainer: Sergej Pupykin <pupykin.s+arch@gmail.com>
+# Maintainer: Douglas Soares de Andrade <dsandrade@gmail.com>
+# Contributor: Douglas Soares de Andrade <dsandrade@gmail.com>
+# Contributor: airwoodix <airwoodix@posteo.me>
+
+pkgbase=python-pyserial
+pkgname=('python-pyserial')
+pkgver=3.4
+pkgrel=2
+pkgdesc="Multiplatform Serial Port Module for Python"
+arch=('any')
+url="https://github.com/pyserial/pyserial"
+license=('custom:PYTHON')
+depends=('python')
+source=("$pkgname-$pkgver.tar.gz::https://github.com/pyserial/pyserial/archive/v$pkgver.tar.gz"
+       "tcp_serial_redirect.service")
+sha256sums=('ca25c777d06ad0b4b129910642aaa75f724157c80e2898a8e3219adc5599a2a1'
+            '4e294f013c4e2fc5fc2ea8a6667672696c3f9e7193899795bcc0957776cc988f')
+
+build() {
+    cd "${srcdir}/pyserial-${pkgver}"
+    python setup.py build
+}
+
+package() {
+    cd "$srcdir"/pyserial-${pkgver}
+    python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+    install -Dm 644 LICENSE.txt ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE.txt
+
+    mkdir -p ${pkgdir}/usr/bin ${pkgdir}/usr/lib/systemd/system
+    install -Dm 755 examples/tcp_serial_redirect.py ${pkgdir}/usr/bin/
+    install -Dm 644 ${srcdir}/tcp_serial_redirect.service ${pkgdir}/usr/lib/systemd/system/
+}
+
