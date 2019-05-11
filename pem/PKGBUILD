@@ -1,0 +1,29 @@
+#Maintainer: airwoodix <airwoodix at posteo dot me>
+
+pkgname=pem
+pkgver=0.7.9
+pkgrel=1
+pkgdesc="GNU Personal Expenses Manager"
+depends=('perl')
+arch=(i686 x86_64)
+url='https://www.gnu.org/software/pem/'
+license=('GPL')
+
+source=("https://ftp.gnu.org/gnu/${pkgname}/${pkgname}-${pkgver}.tar.gz"{,.sig})
+
+md5sums=('97699c1868d2ae6021a88e64783830d7'
+         'SKIP')
+sha256sums=('e23ddcd94c4c65284f8b68c00ce8500dbfaba4a4dbb7a9c264732a1ae264380e'
+            'SKIP')
+
+validpgpkeys=('131F727C2A64FE94CF9F628ABCCD699C2574BFB3')
+
+build(){
+    cd "$pkgname-$pkgver"
+    ./configure --prefix=/usr
+    make
+}
+package(){
+    cd "$pkgname-$pkgver"
+    make DESTDIR="${pkgdir}" install
+}
